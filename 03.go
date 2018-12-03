@@ -56,7 +56,7 @@ func parseClaim(input string) claim {
 	}
 	c.t, err = strconv.Atoi(edges[1])
 	if err != nil {
-		log.Fatalln("Could not convert right edge to int:", edges[1])
+		log.Fatalln("Could not convert top edge to int:", edges[1])
 	}
 
 	size := strings.Split(fields[3], "x")
