@@ -9,6 +9,7 @@ import (
 var funcs = []func(){
 	problem01,
 	problem02,
+	problem03,
 }
 
 func main() {
