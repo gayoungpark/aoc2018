@@ -10,6 +10,7 @@ var funcs = []func(){
 	problem01,
 	problem02,
 	problem03,
+	problem04,
 }
 
 func main() {
