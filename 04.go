@@ -26,7 +26,9 @@ func problem04() {
 		r := parseRecord(input)
 		records = append(records, r)
 	}
-	sort.Slice(records, func(i, j int) bool { return records[i].datetime.Before(records[j].datetime) })
+	sort.Slice(records, func(i, j int) bool {
+		return records[i].datetime.Before(records[j].datetime)
+	})
 
 	sleepyhead := findSleepyhead(records)
 	fmt.Println("Part 1:", sleepyhead)
