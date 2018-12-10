@@ -38,9 +38,15 @@ type point struct {
 	vx, vy int
 }
 
-func (p point) movePoint() point {
+func (p point) moveForward() point {
 	p.x = p.x + p.vx
 	p.y = p.y + p.vy
+	return p
+}
+
+func (p point) moveBackward() point {
+	p.x = p.x - p.vx
+	p.y = p.y - p.vy
 	return p
 }
 
@@ -83,68 +89,62 @@ type box struct {
 	ymin, ymax int
 }
 
-func (b box) size() int {
-	return abs(b.xmin-b.xmax) + abs(b.ymin-b.ymax)
+func (b box) area() int {
+	return (b.xmax - b.xmin) * (b.ymax - b.ymin)
 }
 
 func findBox(points []point) box {
-	b := box{
-		xmin: points[0].x,
-		xmax: points[0].x,
-		ymin: points[0].y,
-		ymax: points[0].y,
-	}
+	var xmin, xmax, ymin, ymax int
 
-	for _, p := range points {
-		if p.x < b.xmin {
-			b.xmin = p.x
+	for i, p := range points {
+		if i == 0 || p.x < xmin {
+			xmin = p.x
 		}
-		if p.x > b.xmax {
-			b.xmax = p.x
+		if i == 0 || p.x > xmax {
+			xmax = p.x
 		}
-		if p.y < b.ymin {
-			b.ymin = p.y
+		if i == 0 || p.y < ymin {
+			ymin = p.y
 		}
-		if p.y > b.ymax {
-			b.ymax = p.y
+		if i == 0 || p.y > ymax {
+			ymax = p.y
 		}
 	}
-	return b
+	return box{xmin: xmin, xmax: xmax, ymin: ymin, ymax: ymax}
 }
 
 func findMessage(points []point, box box) {
-	size := box.size()
-	var newSize int
+	area := box.area()
+	var newArea int
 
 	seconds := 0
 	for {
-		// try next second
-		next := make([]point, len(points))
 		for i, p := range points {
-			next[i] = p.movePoint()
+			points[i] = p.moveForward()
 		}
-		newBox := findBox(next)
-		newSize = newBox.size()
+		box = findBox(points)
+		newArea = box.area()
 
-		// next wasn't better so quit
-		if newSize > size {
+		// next second wasn't better so backtrack
+		if newArea > area {
+			for i, p := range points {
+				points[i] = p.moveBackward()
+			}
 			break
 		}
 
-		// bookkeeping before trying again
-		size = newSize
-		points = next
-		box = newBox
+		area = newArea
 		seconds += 1
 	}
 
-	printMessage(points, box)
+	printMessage(points)
 	fmt.Println("Part 2:", seconds)
 }
 
-func printMessage(points []point, box box) {
-	width := abs(box.xmin-box.xmax) + 1
-	height := abs(box.ymin-box.ymax) + 1
+func printMessage(points []point) {
+	b := findBox(points)
+	width := b.xmax - b.xmin + 1
+	height := b.ymax - b.ymin + 1
 
 	sky := make([][]string, height)
 	for r := range sky {
@@ -155,11 +155,7 @@ func printMessage(points []point, box box) {
 	}
 
 	for _, p := range points {
-
-		xnew := p.x - box.xmin
-		ynew := p.y - box.ymin
-
-		sky[ynew][xnew] = "x"
+		sky[p.y-b.ymin][p.x-b.xmin] = "#"
 	}
 
 	fmt.Println("Part 1:")
