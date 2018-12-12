@@ -39,7 +39,7 @@ func problem12() {
 	firstState := findStateAfter(200, initialState, rules)
 	fmt.Println("Part 1:", sumPlantLocations(firstState))
 
-	secondState := findStateAfter150(50000000000, initialState, rules)
+	secondState := findStateAfter150(50e9, initialState, rules)
 	fmt.Println("Part 2:", sumPlantLocations(secondState))
 }
 
