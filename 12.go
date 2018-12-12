@@ -37,10 +37,10 @@ func problem12() {
 	}
 
 	firstState := findStateAfter(200, initialState, rules)
-	fmt.Println("Part 1:", sumPlantLocations(firstState))
+	fmt.Println("Part 1:", firstState.score())
 
 	secondState := findStateAfter150(50e9, initialState, rules)
-	fmt.Println("Part 2:", sumPlantLocations(secondState))
+	fmt.Println("Part 2:", secondState.score())
 }
 
 type rule struct {
@@ -66,6 +66,16 @@ func (s plantState) trim() plantState {
 	s.offset += start
 
 	return s
+}
+
+func (s plantState) score() int {
+	var sum int
+	for i, r := range s.plants {
+		if r == '#' {
+			sum += i + s.offset
+		}
+	}
+	return sum
 }
 
 func findStateAfter(iter int, state plantState, rules map[string]string) plantState {
@@ -100,14 +110,4 @@ func padSequence(state plantState) plantState {
 		offset: state.offset - 5,
 	}
 	return s.trim()
-}
-
-func sumPlantLocations(state plantState) int {
-	var sum int
-	for i, r := range state.plants {
-		if r == '#' {
-			sum += i + state.offset
-		}
-	}
-	return sum
 }
