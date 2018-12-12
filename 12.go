@@ -87,7 +87,8 @@ func findStateAfter(iter int, state plantState, rules map[string]string) plantSt
 
 func findStateAfter150(iter int, state plantState, rules map[string]string) plantState {
 	s := findStateAfter(150, state, rules)
-	s.offset = iter - 76
+	delta := 150 - s.offset
+	s.offset = iter - delta
 	return s
 }
 
