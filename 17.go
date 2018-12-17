@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/cespare/hasty"
 )
@@ -47,6 +48,7 @@ func problem17() {
 	}
 
 	g := newGround(clays)
+	// g.print = true
 	g.fill()
 
 	water := len(g.water)
@@ -79,6 +81,7 @@ type ground struct {
 	wetSand vec2set
 	min     vec2
 	max     vec2
+	print   bool
 }
 
 func newGround(clays vec2set) *ground {
@@ -117,6 +120,14 @@ func newGround(clays vec2set) *ground {
 	}
 }
 
+func (g *ground) debug() {
+	if !g.print {
+		return
+	}
+	fmt.Println(g)
+	time.Sleep(500 * time.Millisecond)
+}
+
 func (g *ground) String() string {
 	var builder strings.Builder
 	for y := g.min.y; y <= g.max.y; y++ {
@@ -141,9 +152,12 @@ func (g *ground) String() string {
 func (g *ground) fill() {
 	start := vec2{g.spring.x, g.min.y}
 	g.fillDown(start)
+	g.debug()
 }
 
 func (g *ground) fillDown(start vec2) bool {
+	g.debug()
+
 	curr := start
 	for !g.occupied(curr) {
 		if curr.y > g.max.y {
@@ -169,6 +183,7 @@ func (g *ground) fillDown(start vec2) bool {
 }
 
 func (g *ground) fillRow(loc vec2) {
+	g.debug()
 	for v := loc; !g.clays.contains(v); v.x-- {
 		g.water.add(v)
 		delete(g.wetSand, v)
@@ -188,6 +203,7 @@ func (g *ground) fillRight(loc vec2) bool {
 }
 
 func (g *ground) fillLeftOrRight(loc vec2, dir int) bool {
+	g.debug()
 	for v := loc; !g.clays.contains(v); v.x += dir {
 		below := vec2{v.x, v.y + 1}
 		if !g.occupied(below) {
