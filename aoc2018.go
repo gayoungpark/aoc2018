@@ -26,6 +26,7 @@ var funcs = []func(){
 	problem15,
 	problem16,
 	problem17,
+	problem18,
 }
 
 func main() {
