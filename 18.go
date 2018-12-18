@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 func problem18() {
@@ -29,7 +30,6 @@ func problem18() {
 	fmt.Println("Part 1:", l.trees*l.lumberyard)
 
 	l = stepMany(grid, 1e9)
-	fmt.Println(1e9)
 	fmt.Println("Part 2:", l.trees*l.lumberyard)
 }
 
@@ -50,6 +50,11 @@ type landscape struct {
 	open       int
 	trees      int
 	lumberyard int
+}
+
+func (l *landscape) debug() {
+	fmt.Println(l)
+	time.Sleep(50 * time.Millisecond)
 }
 
 func newLandscape(grid [][]byte) landscape {
